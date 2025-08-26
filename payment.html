@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Secure Payment</title>
+    
+    <!-- Google Fonts & Font Awesome for Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <style>
+        /* --- Global Styles & Variables --- */
+        :root {
+            --primary-color: #EF4D6A;
+            --background-color: #FEF6F7;
+            --surface-color: #FFFFFF;
+            --text-dark: #333333;
+            --text-light: #888888;
+            --border-color: #FEEAEC;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* --- Main Payment Form Container --- */
+        .payment-container {
+            max-width: 420px;
+            width: 100%;
+            background-color: var(--surface-color);
+            padding: 30px 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-header h2 {
+            margin: 0;
+            color: var(--text-dark);
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .form-header .icon {
+            color: var(--text-light);
+        }
+
+        /* --- Form Elements Styling --- */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            background-color: #fafafa;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: var(--surface-color);
+            box-shadow: 0 0 0 4px rgba(239, 77, 106, 0.1);
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon .card-icon {
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        /* --- Buttons and Links --- */
+        .payment-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .payment-btn:hover {
+            background-color: #D83151; /* A slightly darker shade for hover */
+        }
+        .payment-btn:active {
+            transform: scale(0.98);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="payment-container">
+        <div class="form-header">
+            <i class="fas fa-lock icon"></i>
+            <h2>Payment Details</h2>
+        </div>
+        
+        <form id="payment-form" onsubmit="submitPayment(event)">
+            <div class="form-group">
+                <label for="cardName">Cardholder Name</label>
+                <input type="text" id="cardName" placeholder="John M. Doe" required />
+            </div>
+
+            <div class="form-group">
+                <label for="cardNumber">Card Number</label>
+                <div class="input-with-icon">
+                    <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" required />
+                    <i class="far fa-credit-card card-icon"></i>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="expiry">Expiry Date</label>
+                    <input type="text" id="expiry" placeholder="MM / YY" maxlength="7" required />
+                </div>
+                <div class="form-group">
+                    <label for="cvv">CVV</label>
+                    <input type="text" id="cvv" placeholder="123" maxlength="3" required />
+                </div>
+            </div>
+
+            <button type="submit" class="payment-btn">Pay Now</button>
+        </form>
+        
+        <a href="cart-test.html" class="back-link">← Back to Cart</a>
+    </div>
+
+    <script>
+        // --- Card Number Formatting (Adds spaces automatically) ---
+        const cardNumberInput = document.getElementById('cardNumber');
+        cardNumberInput.addEventListener('input', (e) => {
+            // Remove all non-digit characters
+            let value = e.target.value.replace(/\D/g, '');
+            let formattedValue = '';
+            // Add a space every 4 digits
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    formattedValue += ' ';
+                }
+                formattedValue += value[i];
+            }
+            e.target.value = formattedValue;
+        });
+
+        // --- Expiry Date Formatting (Adds " / " automatically) ---
+        const expiryInput = document.getElementById('expiry');
+        expiryInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 2) {
+                // Insert " / " after the month
+                value = value.slice(0, 2) + ' / ' + value.slice(2, 4);
+            }
+            e.target.value = value;
+        });
+
+        // --- CVV Formatting (Ensures only numbers are entered) ---
+        const cvvInput = document.getElementById('cvv');
+        cvvInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+
+        // --- Form Submission Logic ---
+        function submitPayment(event) {
+            // Prevents the form from reloading the page
+            event.preventDefault(); 
+            
+            // You can add more validation here if needed
+            
+            alert("Payment successful! Thank you for your order.");
+            
+            // Clear the cart from the browser's storage
+            localStorage.removeItem("cart");
+            
+            // Redirect to a confirmation or homepage after payment
+            // Make sure you have an 'index.html' or similar page
+            window.location.href = "delivary.html"; 
+        }
+    </script>
+
+</body>
+</html>

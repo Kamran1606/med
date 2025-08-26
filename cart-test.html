@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="cart-styles.css"> </head>
+<body>
+
+    <div class="cart-container">
+        <header>
+            <button class="back-link" onclick="window.history.back()"><i class="fas fa-chevron-left"></i></button>
+            <h1>Cart</h1>
+            <button class="clear-cart-btn" onclick="clearCart()"><i class="far fa-trash-alt"></i></button>
+        </header>
+
+        <main id="cart-items">
+            </main>
+
+        <footer class="checkout-footer">
+            <div class="price-details">
+                <span class="amount-label">Amount Price</span>
+                <span class="total-price" id="total-price">$0.00</span>
+            </div>
+            <button class="checkout-btn" onclick="goToPayment()">
+                <span>Check Out</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </footer>
+    </div>
+
+    <script src="cart-script.js"></script> </body>
+</html>
